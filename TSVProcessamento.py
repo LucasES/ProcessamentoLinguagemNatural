@@ -14,25 +14,11 @@ class LimparTexto(object):
 		self.portugues_stemmer = RSLPStemmer()
 		self.tokenizar = WhitespaceTokenizer()
 		self.stopwords = stopwords.words('portuguese')
-		self.mais_utilizadas = ['ja', 'q', 'd', 'ai', 'desse', 'dessa', 'disso', 'nesse', 'nessa', 'nisso', 'esse', 'essa', 'isso', 'so', 'mt', 'vc', 'voce', 'ne', 'ta', 'to', 'pq', 'cade', 'kd', 'la', 'e', 'eh', 'dai', 'pra', 'vai', 'olha', 'pois', 'fica', 'muito', 'muita', 'muitos', 'muitas', 'onde', 'mim', 'oi', 'ola', 'ate']
-		self.ascii_replace = [('á', 'a'), ('à', 'a'), ('ã', 'a'), ('â', 'a'), ('é', 'e'), ('è', 'e'), ('ê', 'e'), ('í', 'i'), ('ó', 'o'), ('ò', 'o'), ('ô', 'o'), ('õ', 'o'), ('ú', 'u'),
-                 ('ç', 'c'), ('ä', 'a'), ('ë', 'e'), ('ï', 'i'), ('ö', 'o'), ('ü', 'u'), ('Á', 'a'), ('À', 'a'), ('Ã', 'a'), ('Â', 'a'), ('É', 'e'), ('È', 'e'), ('Ê', 'e'),
-                 ('Í', 'i'), ('Ó', 'o'), ('Ò', 'o'), ('Ô', 'o'), ('Õ', 'o'), ('Ú', 'u'), ('Ç', 'c')]
-
-	#Remover acentuação dos textos		
-	def removeAccent(self, text):
-		para = text
-		for (lat, asc) in self.ascii_replace:
-			para = para.replace(lat, asc)
-		return para
 
 	#Realiza a remoção das stop words que são palavras que não representam significado para o nosso modelo.
 	def removerStopWords(self, texto):		
-#O decode é necessário se for utilizado o latin-1 no mining
 		texto = ' '.join([word for word in texto.split() if word.decode('latin-1') not in self.stopwords])
 		texto = ' '.join([word for word in texto.split() if word.decode('latin-1') not in self.mais_utilizadas])
-#		texto = ' '.join([word for word in texto.split() if word.decode('utf-8') not in self.stopwords])
-#		texto = ' '.join([word for word in texto.split() if word.decode('utf-8') not in self.mais_utilizadas])
 		return texto
 
 	#Tokenização das palavras por espaços
@@ -75,10 +61,8 @@ with open (arquivo) as f:
 			corpo = t.removerPontuacao(corpo)
 			corpo = corpo.lower()
 			corpo = t.removerStopWords(corpo)
-#			corpo = t.tokenizarPalavras(corpo)
 			corpo = t.removerSufixo(corpo)
 			dataDeCriacao = line.strip().split('\t')[2]								
-#			novoArquivo.write('%s\t%s\t%s\n' %(idTweet, (corpo).encode('latin-1'), dataDeCriacao))
 			novoArquivo.write('%s\t%s\t%s\n' %(idTweet, corpo, dataDeCriacao))
 			s.add(line)
 novoArquivo.close()
