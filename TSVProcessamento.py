@@ -35,8 +35,6 @@ class LimparTexto(object):
 		
 	#Remoção dos sufixos das palavras
 	def removerSufixo(self, para):
-		#Essa linha só é necessário se não for chamado o método de tokenizarPalavras antes de chamar este método.
-		para = self.tokenizar.tokenize(para)
 		text = ''
 		for w in para:
 			text = text + self.portugues_stemmer.stem(w.decode('latin-1')) + ' '
@@ -55,15 +53,17 @@ s = set()
 with open (arquivo) as f:
 	for line in f:
 		if line not in s:
-			idTweet = line.strip().split('\t')[0]
+			categoria = line.strip().split('\t')[0]
 			texto = line.strip().split('\t')[1]
 			corpo = t.removerAcentos(texto)
 			corpo = t.removerPontuacao(corpo)
 			corpo = corpo.lower()
+			corpo = t.removerCaracteresRepetidos(corpo)
 			corpo = t.removerStopWords(corpo)
+			corpo = t.tokenizarPalavras(corpo)
 			corpo = t.removerSufixo(corpo)
 			dataDeCriacao = line.strip().split('\t')[2]								
-			novoArquivo.write('%s\t%s\t%s\n' %(idTweet, corpo, dataDeCriacao))
+			novoArquivo.write('%s\t%s\t%s\n' %(categoria,corpo.encode('latin-1'), dataDeCriacao))
 			s.add(line)
 novoArquivo.close()
 	
