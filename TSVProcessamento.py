@@ -14,11 +14,16 @@ class LimparTexto(object):
 		self.portugues_stemmer = RSLPStemmer()
 		self.tokenizar = WhitespaceTokenizer()
 		self.stopwords = stopwords.words('portuguese')
+		self.mais_utilizadas = ['ja', 'q', 'd', 'ai', 'desse', 'dessa', 'disso', 'nesse', 'nessa', 'nisso', 'esse', 'essa', 'isso', 'so', 'mt', 'vc', 'voce', 'ne', 'ta', 'to', 'pq', 'cade', 'kd', 'la', 'e', 'eh', 'dai', 'pra', 'vai', 'olha', 'pois', 'fica', 'muito', 'muita', 'muitos', 'muitas', 'onde', 'mim', 'oi', 'ola', 'ate']
+
 
 	#Realiza a remoção das stop words que são palavras que não representam significado para o nosso modelo.
 	def removerStopWords(self, texto):		
+#O decode é necessário se for utilizado o latin-1 no mining
 		texto = ' '.join([word for word in texto.split() if word.decode('latin-1') not in self.stopwords])
 		texto = ' '.join([word for word in texto.split() if word.decode('latin-1') not in self.mais_utilizadas])
+#		texto = ' '.join([word for word in texto.split() if word.decode('utf-8') not in self.stopwords])
+#		texto = ' '.join([word for word in texto.split() if word.decode('utf-8') not in self.mais_utilizadas])
 		return texto
 
 	#Tokenização das palavras por espaços
@@ -37,13 +42,18 @@ class LimparTexto(object):
 	def removerSufixo(self, para):
 		text = ''
 		for w in para:
-			text = text + self.portugues_stemmer.stem(w.decode('latin-1')) + ' '
+#			text = text + self.portugues_stemmer.stem(w.decode('latin-1')) + ' '
+			text = text + self.portugues_stemmer.stem(w) + ' '
 		return text
 	
 	def removerAcentos(self, texto):
 		texto = unicode(texto, 'latin-1')
 		para = unidecode.unidecode(texto)
 		return para
+
+	def removerCaracteresRepetidos(self, texto):
+		texto = re.sub(r'([a-z])\1+', r'\1', texto)
+		return texto
 
 arquivo = sys.argv[1]
 novoArquivo = open(sys.argv[2], 'a')
@@ -54,16 +64,16 @@ with open (arquivo) as f:
 	for line in f:
 		if line not in s:
 			categoria = line.strip().split('\t')[0]
-			texto = line.strip().split('\t')[1]
+			idTweet = line.strip().split('\t')[1]
+			texto = line.strip().split('\t')[2]
 			corpo = t.removerAcentos(texto)
 			corpo = t.removerPontuacao(corpo)
 			corpo = corpo.lower()
-			corpo = t.removerCaracteresRepetidos(corpo)
 			corpo = t.removerStopWords(corpo)
 			corpo = t.tokenizarPalavras(corpo)
 			corpo = t.removerSufixo(corpo)
-			dataDeCriacao = line.strip().split('\t')[2]								
-			novoArquivo.write('%s\t%s\t%s\n' %(categoria,corpo.encode('latin-1'), dataDeCriacao))
+			dataDeCriacao = line.strip().split('\t')[3]
+			novoArquivo.write('%s\t%s\t%s\t%s\n' %(categoria, idTweet,corpo.encode('latin-1'), dataDeCriacao))
 			s.add(line)
 novoArquivo.close()
 	
