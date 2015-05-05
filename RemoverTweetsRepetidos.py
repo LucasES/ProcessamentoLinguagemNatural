@@ -7,9 +7,11 @@ s = set()
 
 with open (arquivo) as f:
 	for line in f:
-		if line not in s:
+		if line not in s:	
+			#Informe a categoria especificada
+			categoria = "Outros"
 			corpo = line.strip().split('\t')[0]
 			dataDeCriacao = line.strip().split('\t')[1]								
-			novoArquivo.write('%s\t%s\n' %(corpo, dataDeCriacao))
+			novoArquivo.write(line)
 			s.add(line)
 novoArquivo.close()
