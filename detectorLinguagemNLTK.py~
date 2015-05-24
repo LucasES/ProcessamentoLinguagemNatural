@@ -28,4 +28,4 @@ def get_language(input_text):
     return sorted(likelihoods, key=likelihoods.get, reverse=True)[0]
 
 if __name__ == '__main__':
-	print get_language("I'm at Centro Cristão Espírita Amor e Caridade in Barra Mansa, Rio de Janeiro https://t.co/Kqn5ZY2u4p")
+	print get_language("Mlk cachorro de fluxo virando cristão z xhhxbdjxbdbxhhdn")

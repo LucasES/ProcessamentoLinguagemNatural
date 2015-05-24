@@ -73,8 +73,8 @@ with open (arquivo) as f:
 	for line in f:
 		if line not in s:
 			categoria = line.strip().split('\t')[0]
-#			idTweet = line.strip().split('\t')[1]
-			texto = line.strip().split('\t')[1]
+			idTweet = line.strip().split('\t')[1]
+			texto = line.strip().split('\t')[2]
 			corpo = t.removerAcentos(texto)
 			corpo = t.removerPontuacao(corpo)
 			corpo = corpo.lower()

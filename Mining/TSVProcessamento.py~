@@ -85,7 +85,8 @@ with open (arquivo) as f:
 #			dataDeCriacao = line.strip().split('\t')[3]
 #			novoArquivo.write('%s\t%s\t%s\n' %(idTweet, (corpo).encode('latin-1'), dataDeCriacao))
 #			novoArquivo.write('%s\t%s\t%s\n' %(idTweet, corpo.encode('latin-1'), dataDeCriacao))
-			novoArquivo.write('%s\t%s\n' %(categoria,corpo.encode('latin-1')))
+#			novoArquivo.write('%s\t%s\t%s\t%s\n' %(categoria, idTweet,corpo.encode('latin-1'), dataDeCriacao))
+			novoArquivo.write('%s\n' %(corpo.encode('latin-1')))
 			s.add(line)
 novoArquivo.close()
 	
